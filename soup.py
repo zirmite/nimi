@@ -1,11 +1,15 @@
+from __future__ import unicode_literals
 from bs4 import BeautifulSoup as BS
 import pymongo as pym
+import re
 from bson.objectid import ObjectId
 
 client = pym.MongoClient()
 dbm = client.names
 htmltab = dbm.html
 
+name = 'ANDREW'
+# name = 'GWEN'
 name = 'WILLIS'
 html = htmltab.find_one({'name': name})['html']
 
@@ -25,3 +29,6 @@ try:
 	related = set([t.text for t in tagother.find_all('a', class_='ngl')])
 except IndexError:
 	related = set()
+
+dmean = [d for d in soup.find_all('div', class_='nameheading') if re.match('^Meaning', d.string)][0]
+meaning = dmean.next_sibling.next_sibling.text
