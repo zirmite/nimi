@@ -8,6 +8,7 @@ from dbcode.db.conn import *
 import pymongo as pym
 import time
 import numpy.random as nrand
+import random
 
 db.database = 'babynames'
 eng = sql.create_engine(name_or_url=db)
@@ -52,11 +53,12 @@ apiurl = "https://www.kimonolabs.com/api/2weld18y?apikey=yexwWpC23aIIu1DTXwMiqou
 jsontot = {}
 unire = re.compile("\d|\W")
 for ntable in ntables:
-	sel1 = sql.select([ntable.c.name, ntable.c.href]).where(sql.and_(ntable.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+"), ntable.c.href.op("not regexp")("[[:digit:]]+")))
+	# sel1 = sql.select([ntable.c.name, ntable.c.href]).where(sql.and_(ntable.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+"), ntable.c.href.op("not regexp")("[[:digit:]]+")))
+	sel1 = sql.select([ntable.c.name, ntable.c.href]).where(ntable.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+"))
 	allnames = eng.execute(sel1).fetchall()
 	for i, (name, href) in enumerate(allnames):
-		while unire.search(name):
-			name, href = random.choice(allnames)
+		# while unire.search(name):
+		# 	name, href = random.choice(allnames)
 		urli = apiurl + '&kimpath2=' + name
 		nameurli = nameurl + href
 		rawname = requests.get(nameurli)
