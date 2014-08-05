@@ -46,32 +46,26 @@ nameurl = "http://www.behindthename.com"
 meta.reflect()
 boynames = meta.tables['boynames']
 girlnames = meta.tables['girlnames']
-ntable = boynames
-sel1 = sql.select([boynames.c.name, boynames.c.href]).where(sql.and_(boynames.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+"), boynames.c.href.op("not regexp")("[[:digit:]]+")))
-allnames = eng.execute(sel1).fetchall()
+ntables = [boynames, girlnames]
 
 apiurl = "https://www.kimonolabs.com/api/2weld18y?apikey=yexwWpC23aIIu1DTXwMiqouzr0oeVFWz"
 jsontot = {}
 unire = re.compile("\d|\W")
-for i, (name, href) in enumerate(allnames[500:1000]): # nrand.choice(allnames, 50)):
-	while unire.search(name):
-		name, href = random.choice(allnames)
-	urli = apiurl + '&kimpath2=' + name
-	nameurli = nameurl + href
-	rawname = requests.get(nameurli)
-	htmlD = {'name': name, 'html': rawname.content}
-	htmlid = htmltab.insert(htmlD)
-	response = requests.get(urli)
-	uphtml = ntable.update().where(sql.and_(ntable.c.name==name, ntable.c.href==href)).values(htmlid=htmlid.binary)
-	eng.execute(uphtml)
-	conti = None
-	if response.status_code == 200:
-		conti = response.json()['results']['collection1'][0]
-	else:
-		conti = {'name': name}
-	jsontot[name] = conti
-	jsonid = jsontab.insert(conti)
-	upjson = ntable.update().where(sql.and_(ntable.c.name==name, ntable.c.href==href)).values(jsonid=jsonid.binary)
-	eng.execute(upjson)
-	print str(i) + ": " + name
-	# time.sleep(1)
+for ntable in ntables:
+	sel1 = sql.select([ntable.c.name, ntable.c.href]).where(sql.and_(ntable.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+"), ntable.c.href.op("not regexp")("[[:digit:]]+")))
+	allnames = eng.execute(sel1).fetchall()
+	for i, (name, href) in enumerate(allnames):
+		while unire.search(name):
+			name, href = random.choice(allnames)
+		urli = apiurl + '&kimpath2=' + name
+		nameurli = nameurl + href
+		rawname = requests.get(nameurli)
+		htmlD = {'name': name, 'html': rawname.content}
+		htmlid = htmltab.insert(htmlD)
+
+		uphtml = ntable.update().where(sql.and_(ntable.c.name==name, ntable.c.href==href)).values(htmlid=htmlid.binary)
+		upurl = ntable.update().where(sql.and_(ntable.c.name==name, ntable.c.href==href)).values(kimurl=urli)
+		eng.execute(uphtml)
+		eng.execute(upurl)
+
+		print str(i) + ": " + name
