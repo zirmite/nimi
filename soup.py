@@ -6,7 +6,7 @@ client = pym.MongoClient()
 dbm = client.names
 htmltab = dbm.html
 
-name = 'ANDREW'
+name = 'WILLIS'
 html = htmltab.find_one({'name': name})['html']
 
 soup = BS(html)
@@ -17,3 +17,11 @@ if soup.find_all('span', class_='fem'):
 if soup.find_all('span', class_='masc'):
 	gender['masc'] = True
 
+tagpro = [d for d in soup.find_all('div', class_='namesub') if d.span.string=='PRONOUNCED:'][0]
+pronunciation = (tagpro.find('span', class_='info').text).split()[0] # just grab the first token
+
+try:
+	tagother = [d for d in soup.find_all('div', class_='namesub') if d.span.string=='OTHER LANGUAGES:'][0]
+	related = set([t.text for t in tagother.find_all('a', class_='ngl')])
+except IndexError:
+	related = set()
