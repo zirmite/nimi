@@ -17,7 +17,7 @@ meta.reflect()
 boynames = meta.tables['boynames']
 girlnames = meta.tables['girlnames']
 ntables = [boynames, girlnames]
-sels = [sql.select([ntable.c.name, ntable.c.htmlid]).where(and_(ntable.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+"), ntable.c.htmlid!=None)) for ntable in ntables]
+sels = [sql.select([ntable.c.name, ntable.c.htmlid]).where(ntable.c.htmlid!=None) for ntable in ntables]
 
 if 'names' not in meta.tables:
 	numtab = Table("names", meta, Column('id', Binary(12)), Column('name', String(50)), Column('M', Boolean), Column('F', Boolean), Column('lchar', Integer), Column('lsyl', Integer), Column('first', String(1)))
@@ -31,7 +31,14 @@ if 'related' not in meta.tables:
 else:
 	reltab = meta.tables['names']
 
+if 'usages' not in meta.tables:
+	usgtab = Table("usages", meta, Column('id', Binary(12)), Column('name', String(50)), Column('origin', String(50)))
+	meta.create_all()
+else:
+	usgtab = meta.tables['usages']
+
 numins = numtab.insert()
 relins = reltab.insert()
+usgins = usgtab.insert()
 
 

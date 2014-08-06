@@ -46,8 +46,8 @@ def extract_simple(info):
 	else:
 		lsyl = None
 	try:
-		male = info['gender']['masc']
-		female = info['gender']['fem']
+		male = info['gdr']['masc']
+		female = info['gdr']['fem']
 	except:
 		male = False
 		female = False
@@ -56,18 +56,54 @@ def extract_simple(info):
 
 	return {'id': info['_id'], 'name': info['name'], 'M': male, 'F': female, 'lchar': lchar, 'lsyl': lsyl, 'first': first}
 
+def getrelated(info):
+
+	if 'rel' in info.keys() and info['rel'] is not None:
+		relLD = [None,] * len(info['rel'])
+		for i, n2 in enumerate(info['rel']):
+			n2 = n2.upper()
+			# print n2
+			try:
+				n2id = htmltab.find_one({'name': n2}, {'_id': 1})['_id']
+				relLD[i] = {'id': info['_id'], 'name': info['name'], 'id2': n2id, 'name2': n2}
+			except:
+				relLD[i] = {'id': info['_id'], 'name': info['name'], 'name2': n2}
+	else:
+		return None
+
+	return relLD
+
+def getusage(info):
+
+	if 'usg' in info.keys() and info['usg'] is not None:
+		usgLD = [None,] * len(info['usg'])
+		for i, u in enumerate(info['usg']):
+			usgLD[i] = {'id': info['_id'], 'name': info['name'], 'usage': u}
+	else:
+		return None
+
+	return usgLD
 
 if __name__=='__main__':
 	for ntable, seli in zip(ntables, sels):
 		res1 = eng.execute(seli)
-		for name, hid in res1.fetchall()[0:10]:
+		for name, hid in res1.fetchall():
 			print 'name: ' + name
 			hid = ObjectId(hid)
 			info = parse_name(name)
+			
 			if 'rel' in info.keys() and info['rel']:
 				info['rel'] = list(info['rel'])
 			else:
 				info['rel'] = None
+
+			if infotab.find_one({'_id': hid}):
+				continue
+
 			infotab.insert(info)
 			features = extract_simple(info)
-			numins.values(features)
+			related = getrelated(info)
+			usage = getusage(info)
+			eng.execute(usgins.values(usage))
+			eng.execute(numins.values(features))
+			eng.execute(relins.values(related))
