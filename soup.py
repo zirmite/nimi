@@ -41,7 +41,7 @@ def parse_name(name):
 def extract_simple(info):
 
 	lchar = len(info['name'])
-	if info['pro']:
+	if info['pro'] is not None:
 		lsyl = info['pro'].count('-') + 1
 	else:
 		lsyl = None
@@ -67,7 +67,7 @@ def getrelated(info):
 				n2id = htmltab.find_one({'name': n2}, {'_id': 1})['_id']
 				relLD[i] = {'id': info['_id'], 'name': info['name'], 'id2': n2id, 'name2': n2}
 			except:
-				relLD[i] = {'id': info['_id'], 'name': info['name'], 'name2': n2}
+				relLD[i] = {'id': info['_id'], 'name': info['name'], 'name2': n2, 'id2': None}
 	else:
 		return None
 
@@ -78,7 +78,7 @@ def getusage(info):
 	if 'usg' in info.keys() and info['usg'] is not None:
 		usgLD = [None,] * len(info['usg'])
 		for i, u in enumerate(info['usg']):
-			usgLD[i] = {'id': info['_id'], 'name': info['name'], 'usage': u}
+			usgLD[i] = {'id': info['_id'], 'name': info['name'], 'origin': u}
 	else:
 		return None
 
@@ -104,6 +104,7 @@ if __name__=='__main__':
 			features = extract_simple(info)
 			related = getrelated(info)
 			usage = getusage(info)
+			# print related
 			eng.execute(usgins.values(usage))
 			eng.execute(numins.values(features))
 			eng.execute(relins.values(related))

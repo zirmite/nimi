@@ -12,6 +12,7 @@ infotab = dbm.info
 dbsql = URL(drivername="mysql+pymysql", database='babynames', query={'read_default_file' : '/Users/azirm/.my.cnf', 'read_default_group' : 'python', 'use_unicode': 1, 'charset': 'utf8'})
 eng = create_engine(name_or_url=dbsql)
 meta = MetaData(bind=eng)
+meta.clear()
 meta.reflect()
 
 boynames = meta.tables['boynames']
@@ -29,7 +30,7 @@ if 'related' not in meta.tables:
 	reltab = Table("related", meta, Column('id', Binary(12)), Column('name', String(50)), Column('id2', Binary(12)), Column('name2', String(50)))
 	meta.create_all()
 else:
-	reltab = meta.tables['names']
+	reltab = meta.tables['related']
 
 if 'usages' not in meta.tables:
 	usgtab = Table("usages", meta, Column('id', Binary(12)), Column('name', String(50)), Column('origin', String(50)))
