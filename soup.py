@@ -3,11 +3,23 @@ from bs4 import BeautifulSoup as BS
 import pymongo as pym
 import re
 from bson.objectid import ObjectId
+import sqlalchemy as sql
+from sqlalchemy import create_engine, Table, Column, MetaData
+
 
 client = pym.MongoClient()
 dbm = client.names
 htmltab = dbm.html
 
+from dbcode.db.conn import *
+db.database = 'babynames'
+eng = create_engine(name_or_url=db)
+meta = MetaData(bind=eng)
+meta.reflect()
+boynames = meta.tables['boynames']
+girlnames = meta.tables['girlnames']
+ntables = [boynames, girlnames]
+sels = [sql.select([ntable.c.name, ntable.c.htmlid]).where(ntable.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+")) for ntable in ntables]
 
 def parse_name(name):
 	qhtml = htmltab.find_one({'name': name})
@@ -38,11 +50,16 @@ def parse_name(name):
 	except:
 		meaning = None
 
-	return {'mean': meaning, 'pro': pronunciation, 'rel': related, 'gdr': gender, 'name': name, 'usg': usg}
+	return {'mean': meaning, 'pro': pronunciation, 'rel': related, 'gdr': gender, 'name': name, 'usg': usg, '_id': qhtml['_id']}
 
-name = 'ANDREW'
-# name = 'ANDER'
-# name = 'GWEN'
-# name = 'WILLIS'
+def extract_simple(info):
 
-info = parse_name(name)
+	lchar = len(info['name'])
+	lsyll = info['pro'].count('-') + 1
+	
+
+if __name__=='__main__':
+	# name = 'ANDREW'
+	for ntable, seli in zip(ntables, sels):
+
+		info = parse_name(name)
