@@ -5,21 +5,7 @@ import re
 from bson.objectid import ObjectId
 import sqlalchemy as sql
 from sqlalchemy import create_engine, Table, Column, MetaData
-
-
-client = pym.MongoClient()
-dbm = client.names
-htmltab = dbm.html
-
-from dbcode.db.conn import *
-db.database = 'babynames'
-eng = create_engine(name_or_url=db)
-meta = MetaData(bind=eng)
-meta.reflect()
-boynames = meta.tables['boynames']
-girlnames = meta.tables['girlnames']
-ntables = [boynames, girlnames]
-sels = [sql.select([ntable.c.name, ntable.c.htmlid]).where(ntable.c.name.op("not regexp")("[[:digit:]]+|[[:blank:]]+")) for ntable in ntables]
+from db import *
 
 def parse_name(name):
 	qhtml = htmltab.find_one({'name': name})
@@ -55,11 +41,33 @@ def parse_name(name):
 def extract_simple(info):
 
 	lchar = len(info['name'])
-	lsyll = info['pro'].count('-') + 1
-	
+	if info['pro']:
+		lsyl = info['pro'].count('-') + 1
+	else:
+		lsyl = None
+	try:
+		male = info['gender']['masc']
+		female = info['gender']['fem']
+	except:
+		male = False
+		female = False
+
+	first = info['name'][0].lower()
+
+	return {'id': info['_id'], 'name': info['name'], 'M': male, 'F': female, 'lchar': lchar, 'lsyl': lsyl, 'first': first}
+
 
 if __name__=='__main__':
-	# name = 'ANDREW'
 	for ntable, seli in zip(ntables, sels):
-
-		info = parse_name(name)
+		res1 = eng.execute(seli)
+		for name, hid in res1.fetchall()[0:10]:
+			print 'name: ' + name
+			hid = ObjectId(hid)
+			info = parse_name(name)
+			if 'rel' in info.keys() and info['rel']:
+				info['rel'] = list(info['rel'])
+			else:
+				info['rel'] = None
+			infotab.insert(info)
+			features = extract_simple(info)
+			numins.values(features)
