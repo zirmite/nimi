@@ -86,11 +86,19 @@ def getusage(info):
 
 if __name__=='__main__':
 	for ntable, seli in zip(ntables, sels):
+
 		res1 = eng.execute(seli)
+
+		pname = None
 		for name, hid in res1.fetchall():
+
+			if pname==name:
+				continue
+
 			print 'name: ' + name
 			hid = ObjectId(hid)
 			info = parse_name(name)
+			info['_id'] = hid
 			
 			if 'rel' in info.keys() and info['rel']:
 				info['rel'] = list(info['rel'])
@@ -98,6 +106,8 @@ if __name__=='__main__':
 				info['rel'] = None
 
 			if infotab.find_one({'_id': hid}):
+				pname = name[:]
+				print "here\n"
 				continue
 
 			infotab.insert(info)
@@ -108,3 +118,5 @@ if __name__=='__main__':
 			eng.execute(usgins.values(usage))
 			eng.execute(numins.values(features))
 			eng.execute(relins.values(related))
+
+			pname = name[:]

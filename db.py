@@ -8,6 +8,8 @@ client = pym.MongoClient()
 dbm = client.names
 htmltab = dbm.html
 infotab = dbm.info
+thmcoll = dbm.themes
+assocoll = dbm.assoc
 
 dbsql = URL(drivername="mysql+pymysql", database='babynames', query={'read_default_file' : '/Users/azirm/.my.cnf', 'read_default_group' : 'python', 'use_unicode': 1, 'charset': 'utf8'})
 eng = create_engine(name_or_url=dbsql)
@@ -38,7 +40,21 @@ if 'usages' not in meta.tables:
 else:
 	usgtab = meta.tables['usages']
 
+if 'themes' not in meta.tables:
+	thmtab = Table("themes", meta, Column('id', Binary(12)), Column('name', String(50)), Column('theme', String(50)))
+	meta.create_all()
+else:
+	thmtab = meta.tables['themes']
+
+if 'assoc' not in meta.tables:
+	assoctab = Table("assoc", meta, Column('id', Binary(12)), Column('name', String(50)), Column('assoc', String(50)))
+	meta.create_all()
+else:
+	assoctab = meta.tables['assoc']
+
+
 numins = numtab.insert()
+numq = numtab.select()
 relins = reltab.insert()
 usgins = usgtab.insert()
 
