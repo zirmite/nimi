@@ -1,12 +1,11 @@
 from db import *
 from bs4 import BeautifulSoup as BS
+from bson.objectid import ObjectId
 import requests
-
-href = "http://www.behindthename.com/names/search.php?terms=strong+mighty+powerful&type=m"
+import re
 
 def getterms(href):
 
-	import re
 	import string
 	tre = re.compile("terms=(.+?)\&")
 
@@ -27,8 +26,32 @@ def parse_theme(href):
 	def class_is_not_usg(cssclass):
 		return cssclass != 'usg'
 
-	return d1[0].find_all('a', class_=class_is_not_usg)
+	try:
+		return [d.find_all('a', {'href': re.compile('^/name/')})[0] for d in d1]
+	except Exception as e:
+		print e
+		return None
 
-hrefs = [h['href'] for h in thmcoll.find({}, {'href': 1})]
+if __name__=="__main__":
 
-print parse_theme(hrefs[5])
+	recs = [r for r in thmcoll.find({}, {'href': 1, 'text': 1})]
+	orecs = [r for r in assocoll.find({}, {'href': 1, 'text': 1})]
+	hrefs = [h['href'] for h in recs]
+	texts = [re.sub('"', '', h['text']) for h in recs]
+
+	for i, (href, text) in enumerate(zip(hrefs, texts)):
+		names = parse_theme(href)
+
+		for j, name in enumerate(names):
+			nref = name.attrs['href']
+			name = name.text
+			objids = htmltab.find({'name': name}, {'_id': 1})
+
+			try:
+				thmins = thmins.values({'id': objids[0]['_id'], 'name': name, 'theme': text})
+				eng.execute(thmins)
+			except:
+				pass
+
+
+
