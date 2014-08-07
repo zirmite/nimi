@@ -52,10 +52,16 @@ if 'assoc' not in meta.tables:
 else:
 	assoctab = meta.tables['assoc']
 
-
 numins = numtab.insert()
 numq = numtab.select()
+
 relins = reltab.insert()
+relsel = reltab.select()
+
 usgins = usgtab.insert()
+usgsel = usgtab.select()
+
+thmins = thmtab.insert()
+thmsel = thmtab.select()
 
 
