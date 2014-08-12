@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 import sqlalchemy as sql
-from sqlalchemy import Table, Column, Binary, String, Boolean, MetaData, create_engine, Integer, and_
+from sqlalchemy import Table, Column, Binary, String, Boolean, MetaData, create_engine, Integer, and_, Enum
 from sqlalchemy.engine.url import URL
 import pymongo as pym
 
@@ -51,6 +51,13 @@ if 'assoc' not in meta.tables:
 	meta.create_all()
 else:
 	assoctab = meta.tables['assoc']
+
+if 'ssa' not in meta.tables:
+	yobs = [str(y) for y in range(1940, 2014, 1)]
+	ssatab = Table('ssa', meta, Column('name', String(20)), Column('gdr', Enum('M','F')), Column('year', Integer), Column('n', Integer))
+	meta.create_all()
+else:
+	ssatab = meta.tables['ssa']
 
 numins = numtab.insert()
 numq = numtab.select()
