@@ -65,7 +65,7 @@ else:
 	docsdata = cP.load(fh)
 	fh.close()
 
-tfidf = TfidfVectorizer(max_features=400, use_idf=True, sublinear_tf=True, ngram_range=(1,3), max_df=0.8).fit(docsdata)
+tfidf = TfidfVectorizer(max_features=400, use_idf=True, sublinear_tf=True, ngram_range=(1,2), max_df=0.8).fit(docsdata)
 # f = open("/Users/azirm/Documents/insight/babynames/malletin/docs.txt", "w")
 # for doc in docs:
 # 	f.write(string.join(doc))
