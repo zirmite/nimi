@@ -4,7 +4,7 @@ import re
 import pandas as pd
 
 yre = re.compile("yob(\d\d\d\d).txt")
-files = [str(y) for y in glob.glob("../data/namesSSA/yob*.txt") if int(yre.search(y).group(1)) >= 1940]
+files = [str(y) for y in glob.glob("../data/namesSSA/yob*.txt") if int(yre.search(y).group(1)) < 1940]
 
 for file in files:
 	year = int(yre.search(file).group(1))
