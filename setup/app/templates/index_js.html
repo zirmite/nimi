@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>nimi</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+<!--     <link href="static/starter-template.css" rel="stylesheet"> -->
+    <link href="static/grayscale/css/grayscale.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">nimi</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>nimi</h1>
+        <!-- <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p> -->
+      </div>
+      <div id="input_form">
+<!--       <form name="input" action="">
+  <fieldset>
+ -->    
+
+ <label for="theme" id="theme_label">Theme</label>
+
+    <select name="theme" id="theme">
+      <option value="religious">Religious</option>
+      <option value="intelligent">Intelligent</option>
+      <option value="strong">Strong</option>
+      <option value="flowery">Flowery</option>
+    </select>
+
+    <br>
+    <label for='theme_weight' id='theme_weight_label'>Weight</label>
+    0<input type="range" name="theme_weight" id="theme_weight" min="1" max="10" value="3"/>10
+     
+      <br />
+      <div class="submitbox">
+          <button id="submit_btn">nimi!</button>
+      </div>
+</div>
+ <!--      <div>
+      <p>
+      <form>
+    <input type="text" size="5" name="a"> +
+    <input type="text" size="5" name="b"> =
+    <span id="result">?</span>
+    <p><a href="javascript:void();" id="calculate">calculate server side</a>
+      </form>
+      </div>
+ -->
+      <!-- <div class="buttonbox">
+          <button id="submit">Submit</button>
+      </div> -->
+      <div id="namebox">
+          <table class="table">
+          </table>
+      </div>
+     
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+    <!-- <script type=text/javascript>
+          var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/grayscale/js/grayscale.js"></script>
+    
+    <script>
+       // $('a#calculate').bind('click', function() {
+       //  $.getJSON('/_add_numbers', {
+       //    a: $('input[name="a"]').val(),
+       //    b: $('input[name="b"]').val()
+       //  }, function(data) {
+       //    $("#result").text(data.result);
+       //  });
+       //  return false;
+       //  });
+        //     $.ajax({
+        //     type: "GET",
+        //     url: $SCRIPT_ROOT + "/echo/",
+        //     contentType: "application/json; charset=utf-8",
+        //     data: { diagValue: $('input[name="hospital"]').val(),
+        //             ageValue:  $('input[name="age"]').val()},
+        //     success: function(data) {
+        //         hospital = data.hospital;
+        //         $("#hospital_table tr").remove();
+        //         $("#hospital_table table").append('<tr><th>Facility Name</th><th>Average Total Charges</th></tr>')
+        //         for (i=0; i < hospital.length; i++) {
+        //           $("#hospital_table table").append('<tr><td>' +  hospital[i]['name']+'</td><td>' + hospital[i]['avr_total_charges']+' </td> </tr>');
+        //         }
+        //       }
+        //     })
+        // }
+        
+        
+        var query_for_names = function() {
+            // var theme = $("#theme").val()
+            // cities = [];
+            // console.log('Querying names')
+            $.ajax({
+              type: "GET",
+              url: '/db_json',
+              contentType: "application/json; charset=utf-8",
+              data: {theme: $('#theme').val()}, 
+              success: function(data) {
+                  console.log("about to make table")
+                  names = data.names;
+                  $("#namebox tr").remove();
+                  for (i=0; i < names.length; i++) {
+                        $("#namebox table").append('<tr><td>' + names[i]['name'] + '</td></tr>');
+                  }
+                  console.log('done making table')
+             }   }
+            )
+        };
+        
+        $(document).ready(function() {
+            $('#submit_btn').click(query_for_names);
+        }
+        )
+    </script>
+  </body>
+</html>

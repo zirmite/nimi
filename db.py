@@ -89,7 +89,6 @@ if 'popular' not in meta.tables:
 else:
 	poptab = meta.tables['popular']
 
-
 numins = numtab.insert()
 numq = numtab.select()
 
