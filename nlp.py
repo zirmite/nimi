@@ -19,21 +19,38 @@ stopw = set(stopw)
 tok1 = RegexpTokenizer("\w+")
 upper_re = re.compile('\W([A-Z]+?)\W')
 
+def getthms(name, relname=None):
+
+	if relname is not None:
+		selthm = sql.select([thmtab.c.theme_name]).where(and_(or_(nthmtab.c.id==name['_id'].binary, nthmtab.c.id==relname['_id'].binary), nthmtab.c.theme_id==thmtab.c.theme_id))
+	else:
+		selthm = sql.select([thmtab.c.theme_name]).where(and_(nthmtab.c.id==name['_id'].binary, nthmtab.c.theme_id==thmtab.c.theme_id))
+
+	rthm = eng.execute(selthm)
+
+	thmstr = string.join([t for t in rthm.fetchall()])
+	return thmstr
+
 pklf = "docs.pkl"
 remake = True
 if (not os.path.isfile(pklf)) or (remake):
 	docs = []
 	docD = {}
-	i = 1
+	i = 0
 	for name in infotab.find({}):
 		if name['mean'] is not None:
 			if upper_re.search(name['mean']):
 
+				thms = ''
+
 				try:
 					relname = infotab.find_one({'name': upper_re.search(name['mean']).group(1)})
 					name['mean'] += ' ' + relname['mean']
+					thms = getthms(name, relname)
 				except:
-					pass
+					thms = getthms(name)
+
+			name['mean'] += thms
 			wi = [w for w in tok1.tokenize(name['mean'].lower()) if w not in stopw]
 			numw = len(wi)
 			if numw < 1:

@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 import sqlalchemy as sql
-from sqlalchemy import Table, Column, Binary, String, Boolean, MetaData, create_engine, Integer, and_, Enum
+from sqlalchemy import Table, Column, Binary, String, Boolean, MetaData, create_engine, Integer, and_, Enum, or_
 from sqlalchemy.engine.url import URL
 from sqlalchemy import bindparam
 import pymongo as pym
@@ -23,6 +23,17 @@ girlnames = meta.tables['girlnames']
 ntables = [boynames, girlnames]
 sels = [sql.select([ntable.c.name, ntable.c.htmlid]).where(ntable.c.htmlid!=None) for ntable in ntables]
 
+def mktable(tabledef):
+
+	meta.clear()
+	meta.reflect()
+	if tabledef.name not in meta.tables:
+		tabi = tabledef
+		evalstr = 1
+		meta.create_all()
+	else:
+		alltabs[tabledef] = 1
+
 if 'names' not in meta.tables:
 	numtab = Table("names", meta, Column('id', Binary(12)), Column('name', String(50)), Column('M', Boolean), Column('F', Boolean), Column('lchar', Integer), Column('lsyl', Integer), Column('first', String(1)))
 	meta.create_all()
@@ -41,8 +52,14 @@ if 'usages' not in meta.tables:
 else:
 	usgtab = meta.tables['usages']
 
+if 'name_themes' not in meta.tables:
+	nthmtab = Table("name_themes", meta, Column('id', Binary(12)), Column('name', String(50)), Column('theme', String(50)), Column('theme_id', Integer))
+	meta.create_all()
+else:
+	nthmtab = meta.tables['name_themes']
+
 if 'themes' not in meta.tables:
-	thmtab = Table("themes", meta, Column('id', Binary(12)), Column('name', String(50)), Column('theme', String(50)))
+	thmtab = Table("themes", meta, Column('theme_id', Integer), Column('theme_name', String(40)))
 	meta.create_all()
 else:
 	thmtab = meta.tables['themes']
@@ -55,7 +72,7 @@ else:
 
 if 'ssa' not in meta.tables:
 	# yobs = [str(y) for y in range(1940, 2014, 1)]
-	ssatab = Table('ssa', meta, Column('name', String(20)), Column('gdr', Enum('M','F')), Column('year', Integer), Column('n', Integer))
+	ssatab = Table('ssa', meta, Column('name', String(20)), Column('gdr', Enum('M','F')), Column('year', Integer), Column('n', Integer), Column('name_id', Binary(12)), Column('rank', Integer))
 	meta.create_all()
 else:
 	ssatab = meta.tables['ssa']
@@ -65,6 +82,13 @@ if 'hrefs' not in meta.tables:
 	meta.create_all()
 else:
 	hreftab = meta.tables['hrefs']
+
+if 'popular' not in meta.tables:
+	poptab = Table('popular', meta, Column('name_id', Binary(12)), Column('popular', Boolean), Column('notpopular', Boolean), Column('unusual', Boolean), Column('rare', Boolean))
+	meta.create_all()
+else:
+	poptab = meta.tables['popular']
+
 
 numins = numtab.insert()
 numq = numtab.select()

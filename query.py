@@ -5,6 +5,7 @@ import scipy.sparse as sparse
 from sklearn.metrics.pairwise import linear_kernel
 import cPickle as cP
 import operator
+from collections import OrderedDict
 
 def stemkey(word):
 	stemmer = SnowballStemmer('english')
@@ -54,20 +55,24 @@ docD = cP.load(fh)
 docsdata = cP.load(fh)
 
 keywds = ['english', 'flower']
-results = {}
-for keywd in keywds:
+results = OrderedDict()
+
+for i, keywd in enumerate(keywds):
 	f1 = keyfeat(keywd, tfidf)
-	cosine = linear_kernel(f1, tfidf_t).flatten()
-	related = cosine.argsort()[:(-len(cosine)-1):-1]
-	for name in related:
-		if name in results.keys():
-			results[name] += cosine[name] / len(keywds)
-		else:
-			results[name] = cosine[name] / len(keywds)
+	if i==0:
+		cosine = linear_kernel(f1, tfidf_t).flatten()
+	else:
+		cosine += linear_kernel(f1, tfidf_t).flatten()
 
+related = cosine.argsort()[:(-len(cosine)-1):-1]
+for name in related:
+	if name in results.keys():
+		results[name]['score'] += cosine[name] / len(keywds)
+	else:
+		results[name] = docD[name]
+		results[name]['score'] = cosine[name] / len(keywds)
 
-sort_scores = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
-
-top100 = [docD[s[0]+1]['name'] for s in sort_scores]
+# sort_scores = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
+# top100 = [docD[s[0]]['name'] for s in sort_scores]
 
 
