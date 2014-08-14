@@ -8,6 +8,8 @@ import os.path
 import cPickle as cP
 from db import *
 
+objidsel = sql.select([hreftab.c.href]).where(hreftab.c.htmlid==bindparam('objid'))
+
 from nltk.corpus import stopwords
 stopw = stopwords.words('english')
 stopw.extend(['name', 'word', 'surname', 'meaning', 'history', 'born', 'originally', 'means'])
@@ -18,7 +20,7 @@ tok1 = RegexpTokenizer("\w+")
 upper_re = re.compile('\W([A-Z]+?)\W')
 
 pklf = "docs.pkl"
-remake = False
+remake = True
 if (not os.path.isfile(pklf)) or (remake):
 	docs = []
 	docD = {}
@@ -26,9 +28,7 @@ if (not os.path.isfile(pklf)) or (remake):
 	for name in infotab.find({}):
 		if name['mean'] is not None:
 			if upper_re.search(name['mean']):
-				# print name['name'] + '\n'
-				# print name['mean'] + '\n'
-				# print upper_re.search(name['mean']).group(1)
+
 				try:
 					relname = infotab.find_one({'name': upper_re.search(name['mean']).group(1)})
 					name['mean'] += ' ' + relname['mean']
@@ -40,6 +40,8 @@ if (not os.path.isfile(pklf)) or (remake):
 				continue
 			else:
 				ddir = {'name': name['name'], '_id': name['_id']}
+				rhref = eng.execute(objidsel, objid=name['_id'].binary)
+				ddir['href'] = rhref.fetchone()[0]
 
 				if name['rel'] is not None:
 					ddir['nrel'] = len(name['rel'])
@@ -65,7 +67,12 @@ else:
 	docsdata = cP.load(fh)
 	fh.close()
 
-tfidf = TfidfVectorizer(max_features=400, use_idf=True, sublinear_tf=True, ngram_range=(1,2), max_df=0.8).fit(docsdata)
+tfidf = TfidfVectorizer(max_features=1000, use_idf=True, sublinear_tf=True, ngram_range=(1,2), max_df=0.95).fit(docsdata)
+fh = open('tfidf.pkl', 'wb')
+tfidf_t = tfidf.transform(docsdata)
+cP.dump(tfidf, fh, protocol=-1)
+cP.dump(tfidf_t, fh, protocol=-1)
+fh.close()
 # f = open("/Users/azirm/Documents/insight/babynames/malletin/docs.txt", "w")
 # for doc in docs:
 # 	f.write(string.join(doc))

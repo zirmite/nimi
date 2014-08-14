@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 import sqlalchemy as sql
 from sqlalchemy import Table, Column, Binary, String, Boolean, MetaData, create_engine, Integer, and_, Enum
 from sqlalchemy.engine.url import URL
+from sqlalchemy import bindparam
 import pymongo as pym
 
 client = pym.MongoClient()
@@ -53,11 +54,17 @@ else:
 	assoctab = meta.tables['assoc']
 
 if 'ssa' not in meta.tables:
-	yobs = [str(y) for y in range(1940, 2014, 1)]
+	# yobs = [str(y) for y in range(1940, 2014, 1)]
 	ssatab = Table('ssa', meta, Column('name', String(20)), Column('gdr', Enum('M','F')), Column('year', Integer), Column('n', Integer))
 	meta.create_all()
 else:
 	ssatab = meta.tables['ssa']
+
+if 'hrefs' not in meta.tables:
+	hreftab = Table('hrefs', meta, Column('name', VARCHAR(length=50)), Column('href', VARCHAR(length=50)), Column('htmlid', BINARY(length=12)))
+	meta.create_all()
+else:
+	hreftab = meta.tables['hrefs']
 
 numins = numtab.insert()
 numq = numtab.select()
