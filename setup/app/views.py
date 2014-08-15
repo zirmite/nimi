@@ -2,6 +2,10 @@ from flask import render_template
 from flask import jsonify, request
 from app import app
 import pymysql as mdb
+import sys
+
+sys.path.append('../code/')
+from namequery import *
 
 db = mdb.connect(user="root", host="localhost", db="babynames",
 charset='utf8', unix_socket="/opt/local/var/run/mysql55/mysqld.sock")
@@ -25,10 +29,11 @@ def _blah_add_numbers():
 def db_json():
     keywords = request.args.get('keywords')
     # keywords = ['religious',]
+    keywords = keywords.split('+')
     print keywords
     with db:
         cur = db.cursor()
-        cur.execute("SELECT name FROM themes join name_themes on name_themes.theme_id = themes.theme_id where theme_name = %s order by rand() limit 10;", (keywords,))
+        cur.execute("SELECT name FROM themes join name_themes on name_themes.theme_id = themes.theme_id where theme_name in %s order by rand() limit 10;", (keywords,))
         query_results = cur.fetchall()
     names = []
     for result in query_results:

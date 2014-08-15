@@ -44,33 +44,36 @@ def keyfeat(keyw, tfidf):
 
 		return None
 
-fh = open("tfidf.pkl", "rb")
-tfidf = cP.load(fh)
-tfidf_t = cP.load(fh)
-fh.close()
 
-fh = open('docs.pkl', 'rb')
-docs = cP.load(fh)
-docD = cP.load(fh)
-docsdata = cP.load(fh)
+def getresults(keywords):
+	
+	fh = open("tfidf.pkl", "rb")
+	tfidf = cP.load(fh)
+	tfidf_t = cP.load(fh)
+	fh.close()
 
-keywds = ['english', 'flower']
-results = OrderedDict()
+	fh = open('docs.pkl', 'rb')
+	docs = cP.load(fh)
+	docD = cP.load(fh)
+	docsdata = cP.load(fh)
 
-for i, keywd in enumerate(keywds):
-	f1 = keyfeat(keywd, tfidf)
-	if i==0:
-		cosine = linear_kernel(f1, tfidf_t).flatten()
-	else:
-		cosine += linear_kernel(f1, tfidf_t).flatten()
+	keywds = ['english', 'flower']
+	results = OrderedDict()
 
-related = cosine.argsort()[:(-len(cosine)-1):-1]
-for name in related:
-	if name in results.keys():
-		results[name]['score'] += cosine[name] / len(keywds)
-	else:
-		results[name] = docD[name]
-		results[name]['score'] = cosine[name] / len(keywds)
+	for i, keywd in enumerate(keywds):
+		f1 = keyfeat(keywd, tfidf)
+		if i==0:
+			cosine = linear_kernel(f1, tfidf_t).flatten()
+		else:
+			cosine += linear_kernel(f1, tfidf_t).flatten()
+
+	related = cosine.argsort()[:(-len(cosine)-1):-1]
+	for name in related:
+		if name in results.keys():
+			results[name]['score'] += cosine[name] / len(keywds)
+		else:
+			results[name] = docD[name]
+			results[name]['score'] = cosine[name] / len(keywds)
 
 # sort_scores = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
 # top100 = [docD[s[0]]['name'] for s in sort_scores]

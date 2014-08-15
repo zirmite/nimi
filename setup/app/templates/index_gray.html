@@ -102,11 +102,8 @@
     <section id="download" class="content-section text-center">
         <div class="download-section">
             <div class="container">
-                <div class="col-lg-8 col-lg-offset-2">
-                </div>
                 <div>
-Keywords:<input type='text' name='keywords' id='keywords_text' value="e.g., war king">
-    <br>
+Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 12px; background-color: #72A4D2;" name='keywords' id='keywords_text' value="e.g., war king">
     </div>
 <!--    0<input type="range" name="theme_weight" id="theme_weight" min="1" max="10" value="3"/>10
      
@@ -218,7 +215,7 @@ Keywords:<input type='text' name='keywords' id='keywords_text' value="e.g., war 
             // var theme = $("#theme").val()
             // cities = [];
             // console.log('Querying names')
-            console.log($('#keywords_text').val())
+            // console.log($('#keywords_text').val())
             $.ajax({
               type: "GET",
               url: '/db_json',
