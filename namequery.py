@@ -5,6 +5,7 @@ import scipy.sparse as sparse
 from sklearn.metrics.pairwise import linear_kernel
 import cPickle as cP
 import operator
+import random
 from collections import OrderedDict
 
 def stemkey(word):
@@ -45,7 +46,7 @@ def keyfeat(keyw, tfidf):
 		return None
 
 
-def getresults(keywords):
+def getresults(keywds):
 	
 	fh = open("tfidf.pkl", "rb")
 	tfidf = cP.load(fh)
@@ -57,8 +58,12 @@ def getresults(keywords):
 	docD = cP.load(fh)
 	docsdata = cP.load(fh)
 
-	keywds = ['english', 'flower']
-	results = OrderedDict()
+	# keywds = ['english', 'flower']
+	intresults = OrderedDict()
+	results = pd.DataFrame()
+	tmpname = tabname = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+	tmptab = Table(tmpname, meta, Column('name_id', Binary(12)), Column('score', Float))
+	tmptab.create()
 
 	for i, keywd in enumerate(keywds):
 		f1 = keyfeat(keywd, tfidf)
@@ -69,11 +74,11 @@ def getresults(keywords):
 
 	related = cosine.argsort()[:(-len(cosine)-1):-1]
 	for name in related:
-		if name in results.keys():
-			results[name]['score'] += cosine[name] / len(keywds)
-		else:
-			results[name] = docD[name]
-			results[name]['score'] = cosine[name] / len(keywds)
+		scorei = cosine[name] / len(keywds)
+		insi = tmptab.insert().values(name_id=docD[name]['_id'].binary, score=scorei)
+		eng.execute(insi)
+
+	return tmptab
 
 # sort_scores = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
 # top100 = [docD[s[0]]['name'] for s in sort_scores]

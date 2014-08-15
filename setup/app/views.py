@@ -2,9 +2,9 @@ from flask import render_template
 from flask import jsonify, request
 from app import app
 import pymysql as mdb
-import sys
+import sys, os
 
-sys.path.append('../code/')
+sys.path.append(os.path.abspath('../'))
 from namequery import *
 
 db = mdb.connect(user="root", host="localhost", db="babynames",
@@ -31,10 +31,10 @@ def db_json():
     # keywords = ['religious',]
     keywords = keywords.split('+')
     print keywords
-    with db:
-        cur = db.cursor()
-        cur.execute("SELECT name FROM themes join name_themes on name_themes.theme_id = themes.theme_id where theme_name in %s order by rand() limit 10;", (keywords,))
-        query_results = cur.fetchall()
+    # with db:
+    cur = db.cursor()
+    cur.execute("SELECT name FROM themes join name_themes on name_themes.theme_id = themes.theme_id where theme_name in %s order by rand() limit 10;", (keywords,))
+    query_results = cur.fetchall()
     names = []
     for result in query_results:
         names.append(dict(name=result[0]))
