@@ -1,11 +1,17 @@
 from db import *
 from nltk.corpus import wordnet
 from nltk.stem import SnowballStemmer
+import nltk
 import scipy.sparse as sparse
 from sklearn.metrics.pairwise import linear_kernel
 import cPickle as cP
 import operator
 import random
+import os
+import pandas as pd
+import string
+import numpy as np
+from sqlalchemy import PrimaryKeyConstraint, Index
 from collections import OrderedDict
 
 def stemkey(word):
@@ -27,9 +33,9 @@ def keyfeat(keyw, tfidf):
 	skeys = set(tfidf.vocabulary_.keys())
 
 	keyw = keyw.lower()
-	keyw = stemkey(keyw)
-	# allkeys = getsyns(keyw)
-	# s1 = s1.union(allkeys)
+	if keyw not in skeys:
+		keyw = stemkey(keyw)
+
 	s1.add(keyw)
 	m1 = s1.intersection(skeys)
 	f1 = sparse.csr_matrix((1, len(skeys)))
@@ -43,40 +49,61 @@ def keyfeat(keyw, tfidf):
 
 	else:
 
-		return None
+		return f1
 
 
 def getresults(keywds):
 	
-	fh = open("tfidf.pkl", "rb")
+	fh = open(os.path.abspath('../') + "/tfidf.pkl", "rb")
 	tfidf = cP.load(fh)
 	tfidf_t = cP.load(fh)
 	fh.close()
 
-	fh = open('docs.pkl', 'rb')
+	fh = open(os.path.abspath('../') + '/docs.pkl', 'rb')
 	docs = cP.load(fh)
 	docD = cP.load(fh)
 	docsdata = cP.load(fh)
 
-	# keywds = ['english', 'flower']
 	intresults = OrderedDict()
 	results = pd.DataFrame()
 	tmpname = tabname = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-	tmptab = Table(tmpname, meta, Column('name_id', Binary(12)), Column('score', Float))
+	tmptab = Table(tmpname, meta, Column('name_id', Binary(12)), Column('name', String(50)), Column('score', DOUBLE), Column('mean', String(500)), Index('id', "name_id", unique=True, mysql_length=12), Index('name', 'name', unique=True))
+
 	tmptab.create()
 
-	for i, keywd in enumerate(keywds):
-		f1 = keyfeat(keywd, tfidf)
-		if i==0:
-			cosine = linear_kernel(f1, tfidf_t).flatten()
-		else:
-			cosine += linear_kernel(f1, tfidf_t).flatten()
+	keywds.extend([' '.join(x) for x in nltk.bigrams(keywds)])
+	keywdsyn = keywds[:]
+	for key in set(keywds):
+		syns = getsyns(key)
+		keywdsyn.extend(list(syns))
 
-	related = cosine.argsort()[:(-len(cosine)-1):-1]
+	f1 = sparse.csr_matrix((1, tfidf_t.shape[1]))
+	for i, keywd in enumerate(list(set(keywdsyn))):
+
+		f1 = f1 + keyfeat(keywd, tfidf)
+		
+		# if i==0 and f1 is not None:
+		# 	cosine = linear_kernel(f1, tfidf_t).flatten()
+		# elif f1 is not None:
+		# 	cosine += linear_kernel(f1, tfidf_t).flatten()
+
+	cosine = linear_kernel(f1, tfidf_t).flatten()
+	related = cosine.argsort()[:-1000:-1]
 	for name in related:
-		scorei = cosine[name] / len(keywds)
-		insi = tmptab.insert().values(name_id=docD[name]['_id'].binary, score=scorei)
-		eng.execute(insi)
+		scorei = cosine[name] #/ len(keywds)
+		# scorei += np.random.normal(0.0, scorei / 10.0)
+
+		try:
+			meani = infotab.find_one({'_id': docD[name]['_id']})['mean']
+			meani = meani.replace('"', '&quot;')
+		except:
+			meani = ''
+
+		try:
+			insi = tmptab.insert().values(name_id=docD[name]['_id'].binary, score=float(scorei), mean=meani, name=docD[name]['name'])
+			eng.execute(insi)
+		except:
+			pass
 
 	return tmptab
 

@@ -6,9 +6,10 @@ import string
 import re
 import os.path
 import cPickle as cP
+from bson.objectid import ObjectId
 from db import *
 
-objidsel = sql.select([hreftab.c.href]).where(hreftab.c.htmlid==bindparam('objid'))
+objidsel = sql.select([hreftab.c.href]).where(hreftab.c.name_id==bindparam('objid'))
 
 from nltk.corpus import stopwords
 stopw = stopwords.words('english')
@@ -32,24 +33,27 @@ def getthms(name, relname=None):
 	return thmstr
 
 pklf = "docs.pkl"
-remake = True
+remake = False
 if (not os.path.isfile(pklf)) or (remake):
 	docs = []
 	docD = {}
 	i = 0
-	for name in infotab.find({}):
+	selnames = sql.select([numtab.c.id.distinct()])
+	rnames = eng.execute(selnames)
+	for nid in rnames.fetchall():
+		name = infotab.find_one({'_id': ObjectId(nid[0])})
 		if name['mean'] is not None:
-			if upper_re.search(name['mean']):
 
-				thms = ''
+			if upper_re.search(name['mean']):
 
 				try:
 					relname = infotab.find_one({'name': upper_re.search(name['mean']).group(1)})
 					name['mean'] += ' ' + relname['mean']
 					thms = getthms(name, relname)
 				except:
-					thms = getthms(name)
+					pass
 
+			thms = getthms(name)
 			name['mean'] += thms
 			wi = [w for w in tok1.tokenize(name['mean'].lower()) if w not in stopw]
 			numw = len(wi)
@@ -84,7 +88,7 @@ else:
 	docsdata = cP.load(fh)
 	fh.close()
 
-tfidf = TfidfVectorizer(max_features=1000, use_idf=True, sublinear_tf=True, ngram_range=(1,2), max_df=0.95).fit(docsdata)
+tfidf = TfidfVectorizer(max_features=2000, use_idf=True, sublinear_tf=False, ngram_range=(1,2), max_df=0.95).fit(docsdata)
 fh = open('tfidf.pkl', 'wb')
 tfidf_t = tfidf.transform(docsdata)
 cP.dump(tfidf, fh, protocol=-1)

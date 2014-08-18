@@ -103,7 +103,7 @@
         <div class="download-section">
             <div class="container">
                 <div>
-Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 12px; background-color: #72A4D2;" name='keywords' id='keywords_text' value="e.g., war king">
+Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 12px; background-color: #72A4D2;" name='keywords' id='keywords_text' value="norse god">
     </div>
 <!--    0<input type="range" name="theme_weight" id="theme_weight" min="1" max="10" value="3"/>10
      
@@ -126,7 +126,7 @@ Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-we
       <!-- <div class="buttonbox">
           <button id="submit">Submit</button>
       </div> -->
-      <div id="namebox">
+      <div id="namebox" style="background-color:white">
           <table class="table">
           </table>
       </div>
@@ -226,7 +226,7 @@ Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-we
                   names = data.names;
                   $("#namebox tr").remove();
                   for (i=0; i < names.length; i++) {
-                        $("#namebox table").append('<tr><td>' + names[i]['name'] + '</td></tr>');
+                        $("#namebox table").append('<tr><td><a href="http://www.behindthename.com' + names[i]['href'] + '" title="' + names[i]['mean'] + '">' + names[i]['name'] + '</a></td></tr>');
                   }
                   // console.log('done making table')
              }   }

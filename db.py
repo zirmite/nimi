@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import sqlalchemy as sql
 from sqlalchemy import Table, Column, Binary, String, Boolean, MetaData, create_engine, Integer, and_, Enum, or_
+from sqlalchemy.dialects.mysql import DOUBLE
 from sqlalchemy.engine.url import URL
 from sqlalchemy import bindparam
 import pymongo as pym
@@ -78,7 +79,7 @@ else:
 	ssatab = meta.tables['ssa']
 
 if 'hrefs' not in meta.tables:
-	hreftab = Table('hrefs', meta, Column('name', VARCHAR(length=50)), Column('href', VARCHAR(length=50)), Column('htmlid', BINARY(length=12)))
+	hreftab = Table('hrefs', meta, Column('name', VARCHAR(length=50)), Column('href', VARCHAR(length=50)), Column('name_id', BINARY(length=12)))
 	meta.create_all()
 else:
 	hreftab = meta.tables['hrefs']

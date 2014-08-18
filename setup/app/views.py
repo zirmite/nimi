@@ -29,15 +29,17 @@ def _blah_add_numbers():
 def db_json():
     keywords = request.args.get('keywords')
     # keywords = ['religious',]
-    keywords = keywords.split('+')
+    keywords = keywords.split()
     print keywords
     # with db:
-    cur = db.cursor()
-    cur.execute("SELECT name FROM themes join name_themes on name_themes.theme_id = themes.theme_id where theme_name in %s order by rand() limit 10;", (keywords,))
-    query_results = cur.fetchall()
+    tmptab = getresults(keywords) 
+    seli = sql.select([numtab.c.name, hreftab.c.href, tmptab.c.mean]).where(and_(tmptab.c.name_id==numtab.c.id, tmptab.c.name_id==hreftab.c.name_id)).order_by(tmptab.c.score.desc())
+    resi = eng.execute(seli)
+    query_results = resi.fetchall()
     names = []
+    tmptab.drop()
     for result in query_results:
-        names.append(dict(name=result[0]))
+        names.append(dict(name=result[0], href=result[1], mean=result[2]))
     return jsonify(dict(names=names))
 
 @app.route('/db')
