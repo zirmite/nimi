@@ -24,7 +24,9 @@ def getsyns(word):
 	for syn in syns:
 		l = syn.lemmas
 		for lem in l:
-			synwords.append(lem.name.lower())
+			syni = lem.name.lower()
+			syni = syni.replace("_", " ")
+			synwords.append(syni)
 	return set(synwords)
 
 def keyfeat(keyw, tfidf):

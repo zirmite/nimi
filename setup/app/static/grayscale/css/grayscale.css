@@ -139,6 +139,14 @@ a:focus {
 /*#logo span { display:none }
 }
 */
+
+#namebox table, tr, td {
+    width: 45%;
+}
+#namebox tr {
+    font-size: 2em;
+}
+
 .intro {
     display: table;
     width: 100%;
