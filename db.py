@@ -5,6 +5,7 @@ from sqlalchemy.dialects.mysql import DOUBLE
 from sqlalchemy.engine.url import URL
 from sqlalchemy import bindparam
 import pymongo as pym
+from bson.objectid import ObjectId
 
 client = pym.MongoClient()
 dbm = client.names

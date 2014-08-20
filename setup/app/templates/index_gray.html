@@ -13,7 +13,7 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="static/grayscale/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
     <!-- Custom CSS -->
     <link href="static/grayscale/css/grayscale.css" rel="stylesheet">
 
@@ -101,22 +101,36 @@
 
     <!-- Download Section -->
     <section id="download" class="content-section text-center">
-        <div class="download-section">
-            <div class="container">
-                <div>
-Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 12px; background-color: #72A4D2;" name='keywords' id='keywords_text' value="norse god thunder">
+    <div class="download-section">
+    <div class="container">
+        <div STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;">
+        <form class="pure-form" id="myform">
+        <label for="keywords_text"> Keywords </label>
+        <input class='pure-input-1' type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px; background-color: #72A4D2;" size="80" name='keywords' id='keywords_text' value="norse god thunder">
     </div>
     <br><br>
     <div>
-    <input type='checkbox' name='male' id='masc_check' value='on'>M<br>
-    <input type='checkbox' name='female' id='fem_check' value='on'>F<br>
-<!--    0<input type="range" name="theme_weight" id="theme_weight" min="1" max="10" value="3"/>10
-     
--->      
+    <label for="masc_check">M</label>
+    <input class='pure-checkbox' type='checkbox' name='male' id='masc_check' value='on' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;" checked>
+    <label for="fem_check">F</label>
+    <input class='pure-checkbox' type='checkbox' name='female' id='fem_check' value='on' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;" checked>
+    <br>
+    <label for="pop_check">Popular</label>
+    <input class='pure-checkbox' type='checkbox' name='popular' id='pop_check' value='on' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;">
+       <label for="notpop_check">Not Most Popular</label>
+    <input class='pure-checkbox' type='checkbox' name='notpopular' id='notpop_check' value='on' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;" checked>
+   <label for="unu_check">Unusual</label>
+    <input class='pure-checkbox' type='checkbox' name='unusual' id='unu_check' value='on' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;" checked>
+       <label for="rare_check">Rare</label>
+    <input class='pure-checkbox' type='checkbox' name='rare' id='rare_check' value='on' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;">
+
+</div>
     <br />
       <div class="submitbox">
-          <button id="submit_btn">nimi!</button>
+            <button id="submit_btn" class="pure-button pure-button-primary">NIMI ME!</button>
+          <!-- <button id="submit_btn">nimi!</button> -->
       </div>
+      </form>
 </div>
  <!--      <div>
       <p>
@@ -135,38 +149,18 @@ Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-we
           <table class="table">
           </table>
       </div>
+
+      <div id="savedbox" style="background-color:white">
+          <table class="table">
+          </table>
+      </div>
+
      
     </div><!-- /.container -->
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Contact Section -->
- <!--    <section id="contact" class="container content-section text-center">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <h2>Contact Start Bootstrap</h2>
-                <p>Feel free to email us to provide some feedback on our templates, give us suggestions for new templates and themes, or to just say hello!</p>
-                <p><a href="mailto:feedback@startbootstrap.com">feedback@startbootstrap.com</a>
-                </p>
-                <ul class="list-inline banner-social-buttons">
-                    <li>
-                        <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/IronSummitMedia/startbootstrap" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                    </li>
-                    <li>
-                        <a href="https://plus.google.com/+Startbootstrap/posts" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
- -->
-    <!-- Map Section -->
-    <div id="map"></div>
 
     <!-- Footer -->
     <footer>
@@ -189,38 +183,12 @@ Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-we
     <script src="static/grayscale/js/grayscale.js"></script>
     
     <script>
-       // $('a#calculate').bind('click', function() {
-       //  $.getJSON('/_add_numbers', {
-       //    a: $('input[name="a"]').val(),
-       //    b: $('input[name="b"]').val()
-       //  }, function(data) {
-       //    $("#result").text(data.result);
-       //  });
-       //  return false;
-       //  });
-        //     $.ajax({
-        //     type: "GET",
-        //     url: $SCRIPT_ROOT + "/echo/",
-        //     contentType: "application/json; charset=utf-8",
-        //     data: { diagValue: $('input[name="hospital"]').val(),
-        //             ageValue:  $('input[name="age"]').val()},
-        //     success: function(data) {
-        //         hospital = data.hospital;
-        //         $("#hospital_table tr").remove();
-        //         $("#hospital_table table").append('<tr><th>Facility Name</th><th>Average Total Charges</th></tr>')
-        //         for (i=0; i < hospital.length; i++) {
-        //           $("#hospital_table table").append('<tr><td>' +  hospital[i]['name']+'</td><td>' + hospital[i]['avr_total_charges']+' </td> </tr>');
-        //         }
-        //       }
-        //     })
-        // }
-        
         
         var query_for_names = function() {
             // var theme = $("#theme").val()
             // cities = [];
             // console.log('Querying names')
-            // console.log($('#keywords_text').val())
+            console.log($('#keywords_text').val())
             $.ajax({
               type: "GET",
               url: '/db_json',
@@ -230,32 +198,40 @@ Keywords:<input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-we
                   // console.log("about to make table")
                   names = data.names;
                   $("#namebox tr").remove();
-                  for (i=0; i < names.length; i++) {
-                        $("#namebox table").append('<tr><td><a href="http://www.behindthename.com' + names[i]['href'] + '" title="' + names[i]['mean'] + '">' + names[i]['name'] + '</a></td></tr>');
-                  }
+                  $("#namebox table").append('<tr><th>Ranked List</th></tr>')
+                  var masterTable = d3.select("#namebox table");
+                  var savedTable = d3.select("#savedbox table");
+                  names.forEach(function(item){
+                    ActiveRow(item, masterTable, onSave);
+                  });
+                  // for (i=0; i < names.length; i++) {
+                  //       $("#namebox table").append('<tr><td><a href="http://www.behindthename.com' + names[i]['href'] + '" title="' + names[i]['mean'] + '">' + names[i]['name'] + '</a></td></tr>');
+                  // }
                   // console.log('done making table')
-             }   }
+             }   
+         }
             )
         };
         
         $(document).ready(function() {
-            $('#submit_btn').click(query_for_names);
+            $('#submit_btn').click(function( event ) {
+            event.preventDefault();
+            query_for_names();});
         }
+
         )
     </script>
 
     <!-- jQuery Version 1.11.0 -->
     <script src="static/grayscale/js/jquery-1.11.0.js"></script>
-
+    <script type="text/javascript" src="/static/js/d3.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="static/grayscale/js/bootstrap.min.js"></script>
 
     <!-- Plugin JavaScript -->
     <script src="static/grayscale/js/jquery.easing.min.js"></script>
 
-    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
-
+    <script type="text/javascript" src="/static/js/activelist.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/grayscale.js"></script>
 

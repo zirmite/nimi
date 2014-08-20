@@ -29,18 +29,24 @@ def getsyns(word):
 			synwords.append(syni)
 	return set(synwords)
 
-def keyfeat(keyw, tfidf):
+def keyfeat(keyw, tfidf, tfidf_t):
 
 	s1 = set()
 	skeys = set(tfidf.vocabulary_.keys())
+	f1 = sparse.csr_matrix((1, len(skeys)))
 
 	keyw = keyw.lower()
+	selname = sql.select([numtab.c.id]).where(numtab.c.name==keyw.upper()).limit(1)
+	rname = eng.execute(selname)
+	if rname.rowcount==1:
+		objid = ObjectId(rname.fetchone()[0])
+		
+		
 	if keyw not in skeys:
 		keyw = stemkey(keyw)
 
 	s1.add(keyw)
 	m1 = s1.intersection(skeys)
-	f1 = sparse.csr_matrix((1, len(skeys)))
 
 	if len(m1) > 0:
 		for s in list(m1)[:1]:
@@ -82,7 +88,7 @@ def getresults(keywds):
 	f1 = sparse.csr_matrix((1, tfidf_t.shape[1]))
 	for i, keywd in enumerate(list(set(keywdsyn))):
 
-		f1 = f1 + keyfeat(keywd, tfidf)
+		f1 = f1 + keyfeat(keywd, tfidf, tfidf_t)
 		
 		# if i==0 and f1 is not None:
 		# 	cosine = linear_kernel(f1, tfidf_t).flatten()

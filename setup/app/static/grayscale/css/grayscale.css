@@ -140,13 +140,19 @@ a:focus {
 }
 */
 
-#namebox table, tr, td {
+#namebox table {
     width: 45%;
+    /*color: #fff;*/
 }
 #namebox tr {
     font-size: 2em;
+    font-family: Verdana;
+    color: black;
 }
-
+#namebox th {
+    color: black;
+    text-align: center;
+}
 .intro {
     display: table;
     width: 100%;

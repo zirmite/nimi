@@ -37,6 +37,7 @@ remake = False
 if (not os.path.isfile(pklf)) or (remake):
 	docs = []
 	docD = {}
+	nameD = {}
 	i = 0
 	selnames = sql.select([numtab.c.id.distinct()])
 	rnames = eng.execute(selnames)
