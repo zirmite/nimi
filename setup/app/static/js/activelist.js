@@ -9,8 +9,8 @@ var SavedRow = function(item, parentSelection) {
 	var row;
 
 	row = parentSelection.append('tr');
-	nameUI = row.append('td').text(item);
-	deleteUI = row.append('td').text('delete');
+	nameUI = row.append('td').append('a').attr('href', "http://www.behindthename.com" + item['href']).attr('title', item['mean']).text(item['name']);
+	deleteUI = row.append('td').append('span').attr('class', 'glyphicon glyphicon-remove'); //text('delete');
 
 	deleteUI.on('click', function() {row.remove();});
 };
@@ -22,7 +22,7 @@ var ActiveRow = function(item, parentSelection, onSave) {
 	var row;
 
 	row = parentSelection.append('tr');
-	nameUI = row.append('td').append('a').attr('href', "http://www.behindthename.com" + item['href']).text(item['name']);
+	nameUI = row.append('td').append('a').attr('href', "http://www.behindthename.com" + item['href']).attr('title', item['mean']).text(item['name']);
 	deleteUI = row.append('td').append('span').attr('class', 'glyphicon glyphicon-remove'); //text('delete');
 	saveUI = row.append('td').append('span').attr('class', 'glyphicon glyphicon-ok'); //.text('save');
 

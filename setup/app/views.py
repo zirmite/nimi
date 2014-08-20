@@ -24,7 +24,11 @@ def db_json():
     keywords = request.args.get('keywords')
     male = request.args.get('male')
     female = request.args.get('female')
-    print request.form
+    pop = request.args.get('pop')
+    notpop = request.args.get('notpop')
+    unu = request.args.get('unu')
+    rare = request.args.get('rare')
+    # print request.form
     keywords = keywords.split()
     # print male, female
     print request.method
