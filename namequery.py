@@ -29,17 +29,19 @@ def getsyns(word):
 			synwords.append(syni)
 	return set(synwords)
 
-def keyfeat(keyw, tfidf, tfidf_t):
+def keyfeat(keyw, tfidf, tfidf_t, names):
 
 	s1 = set()
 	skeys = set(tfidf.vocabulary_.keys())
 	f1 = sparse.csr_matrix((1, len(skeys)))
 
 	keyw = keyw.lower()
-	selname = sql.select([numtab.c.id]).where(numtab.c.name==keyw.upper()).limit(1)
-	rname = eng.execute(selname)
-	if rname.rowcount==1:
-		objid = ObjectId(rname.fetchone()[0])
+	# selname = sql.select([numtab.c.id]).where(numtab.c.name==keyw.upper()).limit(1)
+	# rname = eng.execute(selname)
+	if keyw in names:
+		# objid = ObjectId(rname.fetchone()[0])
+		nameind = names.index(keyw) 
+		return tfidf_t[nameind, :]
 		
 		
 	if keyw not in skeys:
@@ -51,7 +53,8 @@ def keyfeat(keyw, tfidf, tfidf_t):
 	if len(m1) > 0:
 		for s in list(m1)[:1]:
 			# norm = 1 / len(m1)
-			f1[0, tfidf.vocabulary_[s]] = 1.0
+			# f1[0, tfidf.vocabulary_[s]] = 1.0
+			f1 = tfidf.transform(s)
 
 		return f1
 
@@ -72,6 +75,10 @@ def getresults(keywds):
 	docD = cP.load(fh)
 	docsdata = cP.load(fh)
 
+	names = [None,] * len(docD.keys())
+	for i in docD.keys():
+		names[i] = docD[i]['name'].lower()
+
 	intresults = OrderedDict()
 	results = pd.DataFrame()
 	tmpname = tabname = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
@@ -81,15 +88,15 @@ def getresults(keywds):
 
 	keywds.extend([' '.join(x) for x in nltk.bigrams(keywds)])
 	keywdsyn = keywds[:]
-	for key in set(keywds):
-		syns = getsyns(key)
-		keywdsyn.extend(list(syns))
+	# for key in set(keywds):
+	# 	syns = getsyns(key)
+	# 	keywdsyn.extend(list(syns))
 
 	f1 = sparse.csr_matrix((1, tfidf_t.shape[1]))
-	for i, keywd in enumerate(list(set(keywdsyn))):
+	for i, keywd in enumerate(keywdsyn):
 
-		f1 = f1 + keyfeat(keywd, tfidf, tfidf_t)
-		
+		f1 = f1 + keyfeat(keywd, tfidf, tfidf_t, names)
+		# print keywd
 		# if i==0 and f1 is not None:
 		# 	cosine = linear_kernel(f1, tfidf_t).flatten()
 		# elif f1 is not None:
@@ -103,19 +110,22 @@ def getresults(keywds):
 
 		try:
 			meani = infotab.find_one({'_id': docD[name]['_id']})['mean']
-			meani = meani.replace('"', '&quot;')
+			# meani = meani.replace('"', '&quot;')
 		except:
 			meani = ''
 
-		try:
-			insi = tmptab.insert().values(name_id=docD[name]['_id'].binary, score=float(scorei), mean=meani, name=docD[name]['name'])
-			eng.execute(insi)
-		except:
-			pass
+		if scorei > 0.001:
+			try:
+				insi = tmptab.insert().values(name_id=docD[name]['_id'].binary, score=float(scorei), mean=meani, name=docD[name]['name'])
+				eng.execute(insi)
+			except:
+				pass
 
 	return tmptab
 
 # sort_scores = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
 # top100 = [docD[s[0]]['name'] for s in sort_scores]
 
-
+if __name__ == '__main__':
+	tmptab = getresults(['welsh', 'mythology', 'sea'])
+	tmptab.drop()

@@ -33,13 +33,13 @@ def getthms(name, relname=None):
 	return thmstr
 
 pklf = "docs.pkl"
-remake = False
+remake = True
 if (not os.path.isfile(pklf)) or (remake):
 	docs = []
 	docD = {}
 	nameD = {}
 	i = 0
-	selnames = sql.select([numtab.c.id.distinct()])
+	selnames = sql.select([numtab.c.id, numtab.c.name]).group_by(numtab.c.name)
 	rnames = eng.execute(selnames)
 	for nid in rnames.fetchall():
 		name = infotab.find_one({'_id': ObjectId(nid[0])})
