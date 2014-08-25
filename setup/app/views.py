@@ -34,9 +34,9 @@ def db_json():
     # print request.method
     gdrwhere = (sql.sql.expression.literal_column("1")==1)
     if male=='true':
-        gdrwhere = and_(numtab.c.M==1, numtab.c.F==0)
+        gdrwhere = and_(numtab.c.M==1)
     if female=='true':
-        gdrwhere = and_(numtab.c.F==1, numtab.c.M==0)
+        gdrwhere = and_(numtab.c.F==1)
 
     if male=='true' and female=='true':
         gdrwhere = or_(numtab.c.M==1, numtab.c.F==1)
