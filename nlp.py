@@ -32,8 +32,11 @@ def getthms(name, relname=None):
 	thmstr = string.join([t for t in rthm.fetchall()])
 	return thmstr
 
+############################
 pklf = "docs.pkl"
 remake = True
+############################
+
 if (not os.path.isfile(pklf)) or (remake):
 	docs = []
 	docD = {}
@@ -89,7 +92,7 @@ else:
 	docsdata = cP.load(fh)
 	fh.close()
 
-tfidf = TfidfVectorizer(max_features=2000, use_idf=True, sublinear_tf=False, ngram_range=(1,2), max_df=0.95).fit(docsdata)
+tfidf = TfidfVectorizer(max_features=5000, use_idf=True, sublinear_tf=False, ngram_range=(1,2), max_df=0.95).fit(docsdata)
 fh = open('tfidf.pkl', 'wb')
 tfidf_t = tfidf.transform(docsdata)
 cP.dump(tfidf, fh, protocol=-1)
