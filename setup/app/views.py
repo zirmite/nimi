@@ -32,11 +32,11 @@ def db_json():
     keywords = keywords.split()
     # print male, female
     # print request.method
-    gdrwhere = None
+    gdrwhere = (sql.sql.expression.literal_column("1")==1)
     if male=='true':
-        gdrwhere = (numtab.c.M==1)
+        gdrwhere = and_(numtab.c.M==1, numtab.c.F==0)
     if female=='true':
-        gdrwhere = (numtab.c.F==1)
+        gdrwhere = and_(numtab.c.F==1, numtab.c.M==0)
 
     if male=='true' and female=='true':
         gdrwhere = or_(numtab.c.M==1, numtab.c.F==1)

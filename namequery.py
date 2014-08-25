@@ -54,7 +54,8 @@ def keyfeat(keyw, tfidf, tfidf_t, names):
 		for s in list(m1)[:1]:
 			# norm = 1 / len(m1)
 			# f1[0, tfidf.vocabulary_[s]] = 1.0
-			f1 = tfidf.transform(s)
+
+			f1 = tfidf.transform([s,])
 
 		return f1
 

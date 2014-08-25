@@ -294,7 +294,7 @@ a:focus {
     padding: 50px 0;
     color: #fff;
     /*background: url(../img/downloads-bg.jpg) no-repeat center center scroll;*/
-    background-color: white;
+    background-color: lightgray;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
@@ -328,7 +328,7 @@ a:focus {
 .btn-default {
     border: 1px solid #219ab3;
     color: #219ab3;
-    background-color: transparent;
+    /*background-color: transparent;*/
 }
 
 .btn-default:hover,

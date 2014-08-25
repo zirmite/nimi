@@ -106,17 +106,39 @@
     <!-- <div STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px;"> -->
 
     <form role="form" id="myform">
-    <label for="keywords_text"> Keywords </label>
-    <input type='text' STYLE="color: #FFFFFF; font-family: Verdana; font-weight: bold; font-size: 18px; background-color: #72A4D2;" size="80" name='keywords' id='keywords_text' value="">
+
+    <div class='form-group'>
+    <label class="control-label" for="keywords_text"> Keywords 
+    <input type='text' class='form-control' id='keywords_text' placeholder="brave strong">
+    </label>
+    </div>
+
+    <br>
+    <br>
+
+    <div class='btn-group' data-toggle='buttons'>
+    <button class="btn btn-default btn-lg" name='warrior' id='warrior_radio'>
+    <!-- <img src="static/nimilogoPSD_white.png">  -->
+    Warrior
+    </button>
+    <button class="btn btn-default btn-lg" type='checkbox' name='zeus' id='zeus_radio'>Zeus
+    </button>
+    <button class="btn btn-default btn-lg" name='flower' id='flower_radio'>
+    <!-- <img src="static/nimilogoPSD_white.png">  -->
+    Flower
+    </button>
+    <button class="btn btn-default btn-lg" type='checkbox' name='goddess' id='goddess_radio'>Goddess
+    </button>
+    </div>
 
     <br>
     <br>
     
     <div class='btn-group' data-toggle='buttons'>
-    <label for="masc_check" class='btn btn-primary active'>
+    <label for="masc_check" class='btn btn-danger active'>
     <input type='checkbox' name='male' id='masc_check' checked>Male
     </label>
-    <label for="fem_check" class='btn btn-primary active'>
+    <label for="fem_check" class='btn btn-primary btn-info active'>
     <input type='checkbox' name='female' id='fem_check' checked>Female
     </label>
     </div>
@@ -125,19 +147,19 @@
     <br>
 
     <div class='btn-group' data-toggle="buttons"> 
-    <label class='btn btn-primary'>
+    <label class='btn btn-primary btn-lg'>
     <input type='checkbox' id='pop_check'>Popular
     </label>
     
-    <label for="notpop_check" class='btn btn-primary'>
-    <input type='checkbox' id='notpop_check'>Not Most Popular
+    <label for="notpop_check" class='btn btn-primary btn-lg'>
+    <input type='checkbox' id='notpop_check'>Common
     </label>
     
-    <label class='btn btn-primary' for="unu_check">
+    <label class='btn btn-primary btn-lg' for="unu_check">
     <input type='checkbox' name='unusual' id='unu_check'>Unusual
     </label>
     
-    <label class='btn btn-primary active' for="rare_check">
+    <label class='btn btn-primary active btn-lg' for="rare_check">
     <input type='checkbox' name='rare' id='rare_check' checked>All the names!!
     </label>
     </div>
@@ -251,6 +273,21 @@
             btn = $("#submit_btn");
             btn.button('loading');
             query_for_names();});
+
+            $('#zeus_radio').click(function () {
+              $('#keywords_text').val('zeus');
+              $('#zeus_radio').removeAttr('checked')
+            });
+            $('#warrior_radio').click(function () {
+              $('#keywords_text').val('warrior');
+            });
+            $('#flower_radio').click(function () {
+              $('#keywords_text').val('flower beauty');
+            });
+            $('#goddess_radio').click(function () {
+              $('#keywords_text').val('goddess egyptian');
+            });
+
         }
 
         )
