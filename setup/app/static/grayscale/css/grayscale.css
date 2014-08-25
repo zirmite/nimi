@@ -141,7 +141,7 @@ a:focus {
 */
 
 #namebox table {
-    width: 45%;
+    /*width: 45%;*/
     : left;
     /*color: #fff;*/
 }
@@ -155,7 +155,7 @@ a:focus {
     text-align: center;
 }
 #savedbox table {
-    width: 45%;
+    /*width: 45%;*/
     /*color: #fff;*/
 }
 #savedbox tr {

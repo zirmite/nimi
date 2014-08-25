@@ -60,7 +60,7 @@ def db_json():
         popwhere = (sql.sql.expression.literal_column("1")==1)
     # with db:
     tmptab = getresults(keywords) 
-    seli = sql.select([numtab.c.name, hreftab.c.href, tmptab.c.mean, tmptab.c.score]).where(and_(tmptab.c.name_id==numtab.c.id, tmptab.c.name_id==hreftab.c.name_id)).group_by(numtab.c.name).order_by(tmptab.c.score.desc())
+    seli = sql.select([numtab.c.name, hreftab.c.href, tmptab.c.mean, tmptab.c.score]).where(and_(tmptab.c.name_id==numtab.c.id, tmptab.c.name_id==hreftab.c.name_id)).group_by(numtab.c.name).order_by(tmptab.c.score.desc()).limit(100)
     seli = seli.where(and_(popid, popwhere, gdrwhere))
     resi = eng.execute(seli)
     query_results = resi.fetchall()
