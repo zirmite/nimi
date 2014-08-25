@@ -14,6 +14,16 @@ import numpy as np
 from sqlalchemy import PrimaryKeyConstraint, Index
 from collections import OrderedDict
 
+fh = open(os.path.abspath('../') + "/tfidf.pkl", "rb")
+tfidf = cP.load(fh)
+tfidf_t = cP.load(fh)
+fh.close()
+
+fh = open(os.path.abspath('../') + '/docs.pkl', 'rb')
+docs = cP.load(fh)
+docD = cP.load(fh)
+docsdata = cP.load(fh)
+
 def stemkey(word):
 	stemmer = SnowballStemmer('english')
 	return stemmer.stem(word)
@@ -66,15 +76,6 @@ def keyfeat(keyw, tfidf, tfidf_t, names):
 
 def getresults(keywds):
 	
-	fh = open(os.path.abspath('../') + "/tfidf.pkl", "rb")
-	tfidf = cP.load(fh)
-	tfidf_t = cP.load(fh)
-	fh.close()
-
-	fh = open(os.path.abspath('../') + '/docs.pkl', 'rb')
-	docs = cP.load(fh)
-	docD = cP.load(fh)
-	docsdata = cP.load(fh)
 
 	names = [None,] * len(docD.keys())
 	for i in docD.keys():

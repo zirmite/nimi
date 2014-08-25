@@ -116,7 +116,9 @@
     <br>
     <br>
 
-    <div class='btn-group' data-toggle='buttons'>
+    <label for="examples"> Examples: </label>
+    <br>
+    <div class='btn-group' data-toggle='buttons-checkbox' id='examples'>
     <button class="btn btn-default btn-lg" name='warrior' id='warrior_radio'>
     <!-- <img src="static/nimilogoPSD_white.png">  -->
     Warrior
@@ -241,23 +243,23 @@
               success: function(data) {
                   // console.log("about to make table")
                   names = data.names;
-                  btn = $("#submit_btn")
+                  var btn = $("#submit_btn");
 
                   $("#namebox tr").remove();
-                  var rth = document.getElementById('rank_head')
+                  var rth = document.getElementById('rank_head');
                   if (rth == null) {
                     $("#namebox table").append('<tr><th id="rank_head">Ranked List</th></tr>');
-                  }
-                  var sth = document.getElementById('save_head')
+                  };
+                  var sth = document.getElementById('save_head');
                   if (sth == null) {
                     $("#savedbox table").append('<tr><th id="save_head">Saved List</th></tr>');
-                  }
+                  };
                   var masterTable = d3.select("#namebox table");
                   var savedTable = d3.select("#savedbox table");
                   names.forEach(function(item){
                     ActiveRow(item, masterTable, onSave);
                   });
-                  btn.button('reset')
+                  btn.button('reset');
                   // for (i=0; i < names.length; i++) {
                   //       $("#namebox table").append('<tr><td><a href="http://www.behindthename.com' + names[i]['href'] + '" title="' + names[i]['mean'] + '">' + names[i]['name'] + '</a></td></tr>');
                   // }
@@ -276,16 +278,19 @@
 
             $('#zeus_radio').click(function () {
               $('#keywords_text').val('zeus');
-              $('#zeus_radio').removeAttr('checked')
+              $('#zeus_radio').button('toggle');
             });
             $('#warrior_radio').click(function () {
               $('#keywords_text').val('warrior');
+              $('#warrior_radio').button('toggle');
             });
             $('#flower_radio').click(function () {
               $('#keywords_text').val('flower beauty');
+              $('#flower_radio').button('toggle');
             });
             $('#goddess_radio').click(function () {
               $('#keywords_text').val('goddess egyptian');
+              $('#goddess_radio').button('toggle');
             });
 
         }
