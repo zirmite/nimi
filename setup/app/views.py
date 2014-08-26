@@ -41,15 +41,20 @@ def db_json():
     if male=='true' and female=='true':
         gdrwhere = or_(numtab.c.M==1, numtab.c.F==1)
 
-    popid = (poptab.c.name_id==numtab.c.id)
+    popid = and_(poptab.c.name_id==numtab.c.id, poptab.c.name_id != None)
     popwhere = None
+
     if pop=='true':
-        popwhere = and_(poptab.c.popular==1)
+        popwhere = (poptab.c.popular==1)
+    else:
+        popwhere = None
+
     if notpop=='true':
         if popwhere is not None:
             popwhere = or_(popwhere, poptab.c.notpopular==1)
         else:
             popwhere = (poptab.c.notpopular==1)
+
     if unu=='true':
         if popwhere is not None:
             popwhere = or_(popwhere, poptab.c.unusual==1)
@@ -58,7 +63,9 @@ def db_json():
 
     if popwhere is None or rare=='true':
         popwhere = (sql.sql.expression.literal_column("1")==1)
-    # with db:
+
+    print popwhere.compile()
+
     tmptab = getresults(keywords) 
     seli = sql.select([numtab.c.name, hreftab.c.href, tmptab.c.mean, tmptab.c.score]).where(and_(tmptab.c.name_id==numtab.c.id, tmptab.c.name_id==hreftab.c.name_id)).group_by(numtab.c.name).order_by(tmptab.c.score.desc()).limit(100)
     seli = seli.where(and_(popid, popwhere, gdrwhere))

@@ -118,7 +118,7 @@
 
     <div class='form-group'>
     <label class="control-label" for="keywords_text"> Keywords 
-    <input type='text' class='form-control' id='keywords_text' placeholder="brave strong">
+    <input type='text' class='form-control' id='keywords_text' placeholder="brave strong" style='background: lightblue;'>
     </label>
     </div>
 
@@ -132,10 +132,9 @@
     <!-- <img src="static/nimilogoPSD_white.png">  -->
     Warrior
     </button>
-    <button class="btn btn-default btn-lg" type='checkbox' name='zeus' id='zeus_radio'>Zeus
+    <button class="btn btn-default btn-lg" type='checkbox' name='zeus' id='zeus_radio'>Dylan
     </button>
     <button class="btn btn-default btn-lg" name='flower' id='flower_radio'>
-    <!-- <img src="static/nimilogoPSD_white.png">  -->
     Flower
     </button>
     <button class="btn btn-default btn-lg" type='checkbox' name='goddess' id='goddess_radio'>Goddess
@@ -158,15 +157,15 @@
     <br>
 
     <div class='btn-group' data-toggle="buttons"> 
-    <label class='btn btn-primary btn-lg'>
+    <label class='btn btn-primary btn-lg' title='Top 25 (since 2003)'>
     <input type='checkbox' id='pop_check'>Popular
     </label>
     
-    <label for="notpop_check" class='btn btn-primary btn-lg'>
+    <label for="notpop_check" class='btn btn-primary btn-lg' title='Top 100 (since 2003)'>
     <input type='checkbox' id='notpop_check'>Common
     </label>
     
-    <label class='btn btn-primary btn-lg' for="unu_check">
+    <label class='btn btn-primary btn-lg' for="unu_check" title='Appears in SSA data'>
     <input type='checkbox' name='unusual' id='unu_check'>Unusual
     </label>
     
@@ -179,7 +178,7 @@
     <br>
     <br>
       <div class="submitbox">
-            <button id="submit_btn" type='submit' data-loading-text="Loading..." class='btn btn-default'>NIMI ME!</button>
+            <button id="submit_btn" type='submit' data-loading-text="Loading..." class='btn btn-default'><img src="static/nimilogoPSD.png" width="50" height="20" style='vertical-align:bottom'>  ME!</button>
       </div>
       </form>
     </div>
@@ -287,7 +286,7 @@
             query_for_names();});
 
             $('#zeus_radio').click(function () {
-              $('#keywords_text').val('zeus');
+              $('#keywords_text').val('dylan welsh');
               $('#zeus_radio').button('toggle');
             });
             $('#warrior_radio').click(function () {
